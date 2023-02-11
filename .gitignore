@@ -1,3 +1,4 @@
 ny_taxi_post/
 *.ipynb
 *.csv
+*.parquet
