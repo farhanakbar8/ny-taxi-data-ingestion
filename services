@@ -1,1 +1,5 @@
-docker run --name zoomcamp -it -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="root" -e POSTGRES_DB="ny_taxi" -v /home/farhan/workspace/zoomcamp/1 -p 5432:5432 postgres
+docker run --name zoomcamp -it -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="root" -e POSTGRES_DB="ny_taxi" -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data -p 5432:5432 postgres
+
+docker run --name pg-database -it -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="root" -e POSTGRES_DB="ny_taxi" -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data -p 5432:5432 --network=pg-network postgres
+
+docker run -it --name pgadmin -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" -e PGADMIN_DEFAULT_PASSWORD="admin" --network=pg-network -p 8080:80 dpage/pgadmin4
