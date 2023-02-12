@@ -3,3 +3,29 @@ docker run --name zoomcamp -it -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="roo
 docker run --name pg-database -it -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="root" -e POSTGRES_DB="ny_taxi" -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data -p 5432:5432 --network=pg-network postgres
 
 docker run -it --name pgadmin -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" -e PGADMIN_DEFAULT_PASSWORD="admin" --network=pg-network -p 8080:80 dpage/pgadmin4
+
+# dockerizing python script
+docker buildx build -t taxi_ingest:v001 -f $(pwd)/DockerFile .
+docker build -t taxi_ingest:v001 -f $(pwd)/DockerFile .
+
+URL="https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet"
+
+docker run -it \
+    --network=pg-network \
+    taxi_ingest:v001 \
+        --username=root \
+        --password=root \
+        --host=pg-database \
+        --port=5432 \
+        --db=ny_taxi \
+        --table_name=yellow_taxi_data \
+        --url=${URL}
+
+URL="https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet"
+python3 ingest.py --username=root \
+        --password=root \
+        --host=pg-database \
+        --port=5432 \
+        --db=ny_taxi \
+        --table_name=yellow_taxi_data \
+        --url=${URL}
