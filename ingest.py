@@ -38,7 +38,6 @@ def main(params):
     data = pd.read_parquet(filename)
     data.to_csv(csv_name)
 
-    # engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
     engine.connect()
     data_iter = load_data_iterator(csv_name)
