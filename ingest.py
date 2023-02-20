@@ -19,7 +19,6 @@ def create_empty_table(data_iter, engine, table_name):
     data = next(data_iter)
     data.drop(columns='Unnamed: 0', axis=0, inplace=True)
     data.head(0).to_sql(name=table_name, con=engine, if_exists='replace')
-    ingest_to_db(data, engine, table_name)
 
 def ingest_to_db(data, engine, table_name):
     data.to_sql(name=table_name, con=engine, if_exists='append')
