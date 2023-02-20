@@ -1,5 +1,6 @@
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy import inspect
 from time import time
 import argparse
 import os
@@ -42,7 +43,8 @@ def main(params):
     engine.connect()
     data_iter = load_data_iterator(csv_name)
 
-    create_empty_table(data_iter, engine, table_name)
+    if inspect(engine).get_table_names():
+        create_empty_table(data_iter, engine, table_name)
 
     for data in data_iter:
         t_start = time()
