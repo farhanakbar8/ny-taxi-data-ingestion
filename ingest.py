@@ -10,14 +10,12 @@ def load_data_iterator(csv_name):
     return data_iter
 
 def load_data_chunk(data):
-    data.drop(columns='Unnamed: 0', inplace=True)
     data.tpep_dropoff_datetime = pd.to_datetime(data.tpep_dropoff_datetime)
     data.tpep_pickup_datetime = pd.to_datetime(data.tpep_pickup_datetime)
     return data
 
 def create_empty_table(data_iter, engine, table_name):
     data = next(data_iter)
-    data.drop(columns='Unnamed: 0', axis=0, inplace=True)
     data.head(0).to_sql(name=table_name, con=engine, if_exists='replace')
 
 def ingest_to_db(data, engine, table_name):
@@ -36,7 +34,7 @@ def main(params):
 
     os.system(f"wget {url} -O {filename}")
     data = pd.read_parquet(filename)
-    data.to_csv(csv_name)
+    data.to_csv(csv_name, index=False)
 
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
     engine.connect()
